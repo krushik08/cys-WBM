@@ -12,7 +12,13 @@ const App = () => {
   const theme = baseTheme;
   return (
     <>
-      <Toaster className="toaster" />
+      <Toaster
+        toastOptions={{
+          style: {
+            fontFamily: "'DM Sans', sans-serif",
+          },
+        }}
+      />
       <ThemeProvider theme={theme}>{routing}</ThemeProvider>
     </>
   );

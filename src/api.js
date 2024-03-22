@@ -32,7 +32,6 @@ const ApiService = {
     };
     return axios(reqOptions)
       .then((response) => {
-        debugger;
         return response;
       })
       .catch(function (err) {

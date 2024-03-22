@@ -3,6 +3,7 @@ import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import AdUnitsOutlinedIcon from '@mui/icons-material/AdUnitsOutlined';
 import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import StyleIcon from '@mui/icons-material/Style';
 
 const Menuitems = [
   {
@@ -14,7 +15,12 @@ const Menuitems = [
   {
     title: 'Reading',
     icon: AdUnitsOutlinedIcon,
-    href: '/Reading',
+    href: '/reading',
+  },
+  {
+    title: 'Voucher',
+    icon: StyleIcon,
+    href: '/Voucher',
   },
   {
     title: 'User',

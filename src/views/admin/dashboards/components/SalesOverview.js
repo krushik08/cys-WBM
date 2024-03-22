@@ -1,14 +1,41 @@
-import React from "react";
-import { Card, CardContent, Typography, Box } from "@mui/material";
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 import Chart from 'react-apexcharts';
-
-
+import ApiService from '../../../../api';
 
 const SalesOverview = () => {
+  const [serialEarning, setSerialEarning] = useState([]);
+  const [serialConsumption, setSerialConsumption] = useState([]);
+  const [serialDate, setSerialDate] = useState([]);
+  const fetchStatics = () => {
+    ApiService.request(`/stats/get-one-year-stats`, 'get')
+      .then((response) => {
+        if (response.status === 200) {
+          if (response.data.length) {
+            const earnings = [];
+            const consumptions = [];
+            const date = [];
+            response.data.map((item) => {
+              earnings.push(item.earnings);
+              consumptions.push(item.waterConsumption);
+              date.push(item.date);
+            });
+            setSerialEarning(earnings);
+            setSerialConsumption(consumptions);
+            setSerialDate(date);
+          }
+        }
+      })
+      .catch((err) => {});
+  };
+  useEffect(() => {
+    fetchStatics();
+    return () => {};
+  }, []);
   const optionssalesoverview = {
     grid: {
       show: true,
-      borderColor: "transparent",
+      borderColor: 'transparent',
       strokeDashArray: 2,
       padding: {
         left: 0,
@@ -19,15 +46,15 @@ const SalesOverview = () => {
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: "42%",
-        endingShape: "rounded",
+        columnWidth: '42%',
+        endingShape: 'rounded',
         borderRadius: 5,
       },
     },
 
-    colors: ["#1e4db7", "#a7e3f4"],
+    colors: ['#1e4db7', '#a7e3f4'],
     fill: {
-      type: "solid",
+      type: 'solid',
       opacity: 1,
     },
     chart: {
@@ -35,7 +62,7 @@ const SalesOverview = () => {
       toolbar: {
         show: false,
       },
-      foreColor: "#adb0bb",
+      foreColor: '#adb0bb',
       fontFamily: "'DM Sans',sans-serif",
       sparkline: {
         enabled: false,
@@ -51,99 +78,82 @@ const SalesOverview = () => {
       show: false,
     },
     xaxis: {
-      type: "category",
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "July",
-        "Aug",
-        "Sept",
-        "Oct",
-        "Nov",
-        "Dec",
-      ],
+      type: 'category',
+      categories: serialDate,
       labels: {
         style: {
-          cssClass: "grey--text lighten-2--text fill-color",
+          cssClass: 'grey--text lighten-2--text fill-color',
         },
       },
     },
     yaxis: {
       show: true,
-      min: 100,
+      min: 1,
       max: 400,
       tickAmount: 3,
       labels: {
         style: {
-          cssClass: "grey--text lighten-2--text fill-color",
+          cssClass: 'grey--text lighten-2--text fill-color',
         },
       },
     },
     stroke: {
       show: true,
       width: 5,
-      lineCap: "butt",
-      colors: ["transparent"],
+      lineCap: 'butt',
+      colors: ['transparent'],
     },
     tooltip: {
-      theme: "dark",
+      theme: 'dark',
     },
   };
   const seriessalesoverview = [
     {
-      name: "Ample Admin",
-      data: [355, 390, 300, 350, 390, 180, 355, 390, 300, 350, 390, 180],
+      name: 'Earnings',
+      data: serialEarning,
     },
     {
-      name: "Pixel Admin",
-      data: [280, 250, 325, 215, 250, 310, 280, 250, 325, 215, 250, 310],
+      name: 'Water Consumption',
+      data: serialConsumption,
     },
   ];
-
-
-
-
 
   return (
     <Card
       variant="outlined"
       sx={{
-        paddingBottom: "0",
+        paddingBottom: '0',
       }}
     >
       <CardContent
         sx={{
-          paddingBottom: "16px !important",
+          paddingBottom: '16px !important',
         }}
       >
         <Box
           sx={{
             display: {
-              sm: "flex",
-              xs: "block",
+              sm: 'flex',
+              xs: 'block',
             },
-            alignItems: "center",
+            alignItems: 'center',
           }}
         >
           <Box>
             <Typography
               variant="h3"
               sx={{
-                marginBottom: "0",
+                marginBottom: '0',
               }}
               gutterBottom
             >
-              Sales Overview
+              Overview
             </Typography>
           </Box>
           <Box
             sx={{
-              marginLeft: "auto",
-              display: "flex",
+              marginLeft: 'auto',
+              display: 'flex',
               mt: {
                 lg: 0,
                 xs: 2,
@@ -152,14 +162,14 @@ const SalesOverview = () => {
           >
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
               }}
             >
               <Box
                 sx={{
-                  backgroundColor: "secondary.main",
-                  borderRadius: "50%",
+                  backgroundColor: 'secondary.main',
+                  borderRadius: '50%',
                   height: 8,
                   width: 8,
                   mr: 1,
@@ -168,23 +178,23 @@ const SalesOverview = () => {
               <Typography
                 variant="h6"
                 sx={{
-                  color: "secondary.main",
+                  color: 'secondary.main',
                 }}
               >
-                Ample
+                Water Consumption
               </Typography>
             </Box>
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
-                marginLeft: "10px",
+                display: 'flex',
+                alignItems: 'center',
+                marginLeft: '10px',
               }}
             >
               <Box
                 sx={{
-                  backgroundColor: "primary.main",
-                  borderRadius: "50%",
+                  backgroundColor: 'primary.main',
+                  borderRadius: '50%',
                   height: 8,
                   width: 8,
                   mr: 1,
@@ -193,17 +203,17 @@ const SalesOverview = () => {
               <Typography
                 variant="h6"
                 sx={{
-                  color: "primary.main",
+                  color: 'primary.main',
                 }}
               >
-                Pixel Admin
+                Earnings
               </Typography>
             </Box>
           </Box>
         </Box>
         <Box
           sx={{
-            marginTop: "25px",
+            marginTop: '25px',
           }}
         >
           <Chart

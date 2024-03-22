@@ -62,7 +62,7 @@ const Overview = () => {
                   {staticData?.totalCustomers}
                 </Typography>
                 <Typography variant="h5" align="right">
-                  Total Clients
+                  Total Customer
                 </Typography>
               </Grid>
             </Grid>{' '}
@@ -95,7 +95,7 @@ const Overview = () => {
                   {staticData?.totalWaterUsage}
                 </Typography>
                 <Typography variant="h5" align="right">
-                  Total Uses
+                  Total Usage
                 </Typography>
               </Grid>
             </Grid>{' '}
@@ -158,7 +158,7 @@ const Overview = () => {
                   align="right"
                   color={'secondary'}
                 >
-                  {staticData?.totalPaymentPending}
+                  {staticData?.totalPaymentPending || 0}
                 </Typography>
                 <Typography variant="h5" align="right">
                   Total Pending

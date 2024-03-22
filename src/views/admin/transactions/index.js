@@ -26,54 +26,34 @@ return ()=>{
 const columns = useMemo(
   () => [
     {
-      header: 'Transaction Id',
-      accessorKey: 'id',
+      header: 'Customer Name',
+      accessorKey: 'customername',
       align: 'center',
-      Cell: ({ row }) => <>{row?.original?.id}</>,
+      Cell: ({ row }) => <>{row?.original?.customerName}</>,
     },
     {
-      header: 'Bill Number',
-      accessorKey: 'id',
-      Cell: ({ row }) => <>{row?.original?.billing?.id}</>,
-    },
-    {
-      header: 'Due Date',
-      accessorKey: 'dueDate',
-      Cell: ({ row }) => <>{row?.original?.billing?.dueDate}</>,
-    },
-    {
-      header: 'Voucher Code',
-      accessorKey: 'code',
-      Cell: ({ row }) => <>{row?.original?.voucher?.code || '- -'}</>,
-    },
-    {
-      header: 'Amount',
-      Cell: ({ row }) => <>{row?.original?.billing?.amount}</>,
+      header: 'Water Consumption',
+      accessorKey: 'waterConsumption',
+      Cell: ({ row }) => <>{row?.original?.waterConsumption}</>,
     },
     {
       header: 'Status',
       Cell: ({ row }) => (
-        <>
-          {console.log('row?.original', row?.original)}
-          <Chip
-            sx={{
-              pl: '4px',
-              pr: '4px',
-              backgroundColor: row?.original.billing?.billPaid
-                ? 'green'
-                : 'red',
-              color: '#fff',
-            }}
-            size="small"
-            label={row?.original.billing?.billPaid ? 'Paid' : 'Not Paid'}
-          ></Chip>
-        </>
+        <Chip
+          sx={{
+            pl: '4px',
+            pr: '4px',
+            backgroundColor: row?.original.billPaidDate ? 'green' : 'red',
+            color: '#fff',
+          }}
+          size="small"
+          label={row?.original.billPaidDate ? 'Paid' : 'Not Paid'}
+        ></Chip>
       ),
     },
     {
-      header: 'Last Reading',
-      accessorKey: 'lastReadingId',
-      Cell: ({ row }) => <>{row?.original?.billing?.lastReadingId}</>,
+      header: 'Amount',
+      Cell: ({ row }) => <>{row?.original?.billAmount}</>,
     },
   ],
   []

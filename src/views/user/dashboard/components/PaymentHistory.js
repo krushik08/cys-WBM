@@ -2,72 +2,53 @@ import {
   Box,
   Card,
   CardContent,
+  Chip,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
   Typography,
-} from "@mui/material";
-import React from "react";
-
-const products = [
-  {
-    id: "1",
-    name: "Sunil Joshi",
-    post: "Web Designer",
-    pname: "Elite Admin",
-    priority: "Low",
-    pbg: "primary.main",
-    budget: "3.9",
-  },
-  {
-    id: "2",
-    name: "Andrew McDownland",
-    post: "Project Manager",
-    pname: "Real Homes WP Theme",
-    priority: "Medium",
-    pbg: "secondary.main",
-    budget: "24.5",
-  },
-  {
-    id: "3",
-    name: "Christopher Jamil",
-    post: "Project Manager",
-    pname: "MedicalPro WP Theme",
-    priority: "High",
-    pbg: "error.main",
-    budget: "12.8",
-  },
-  {
-    id: "4",
-    name: "Nirav Joshi",
-    post: "Frontend Engineer",
-    pname: "Hosting Press HTML",
-    priority: "Critical",
-    pbg: "success.main",
-    budget: "2.4",
-  },
-];
+} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import ApiService from '../../../../api';
 
 const PaymentHistory = () => {
+  const [paymentHistory, setPaymentHistory] = useState([]);
+  const userData = JSON.parse(localStorage.getItem('user-info'));
+  const fetchPaymentHistory = () => {
+    ApiService.request(
+      `/payment/get-transactions-history-by-id/${userData?.id}`,
+      'get'
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          setPaymentHistory(response.data);
+        }
+      })
+      .catch((err) => {});
+  };
+  useEffect(() => {
+    fetchPaymentHistory();
+    return () => {};
+  }, []);
   return (
     <Card variant="outlined">
       <CardContent>
         <Box
           sx={{
             display: {
-              sm: "flex",
-              xs: "block",
+              sm: 'flex',
+              xs: 'block',
             },
-            alignItems: "flex-start",
+            alignItems: 'flex-start',
           }}
         >
           <Box>
             <Typography
               variant="h3"
               sx={{
-                marginBottom: "0",
+                marginBottom: '0',
               }}
               gutterBottom
             >
@@ -77,14 +58,14 @@ const PaymentHistory = () => {
         </Box>
         <Box
           sx={{
-            overflow: "auto",
+            overflow: 'auto',
           }}
         >
           <Table
             aria-label="simple table"
             sx={{
               mt: 3,
-              whiteSpace: "nowrap",
+              whiteSpace: 'nowrap',
             }}
           >
             <TableHead>
@@ -96,45 +77,54 @@ const PaymentHistory = () => {
                 </TableCell>
                 <TableCell>
                   <Typography color="textSecondary" variant="h6">
-                    Month
+                    Water Consumption
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
                   <Typography color="textSecondary" variant="h6">
-                    Earnings
+                    Status
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
                   <Typography color="textSecondary" variant="h6">
-                    Earnings
+                    Amount
                   </Typography>
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {products.map((product) => (
-                <TableRow key={product.name}>
+              {paymentHistory.map((payment) => (
+                <TableRow key={payment.id}>
                   <TableCell>
                     <Typography
                       sx={{
-                        fontSize: "15px",
-                        fontWeight: "500",
+                        fontSize: '15px',
+                        fontWeight: '500',
                       }}
                     >
-                      {product.id}
+                      {payment.paymentId}
                     </Typography>
                   </TableCell>
 
                   <TableCell>
                     <Typography color="textSecondary" variant="h6">
-                      {product.pname}
+                      {payment.waterConsumption}
                     </Typography>
                   </TableCell>
                   <TableCell align="center">
-                    <Typography variant="h6">${product.budget}k</Typography>
+                    <Chip
+                      sx={{
+                        pl: '4px',
+                        pr: '4px',
+                        backgroundColor: payment.billPaidDate ? 'green' : 'red',
+                        color: '#fff',
+                      }}
+                      size="small"
+                      label={payment.billPaidDate ? 'Paid' : 'Not Paid'}
+                    ></Chip>
                   </TableCell>
                   <TableCell align="center">
-                    <Typography variant="h6">${product.budget}k</Typography>
+                    <Typography variant="h6">{payment.billAmount}</Typography>
                   </TableCell>
                 </TableRow>
               ))}

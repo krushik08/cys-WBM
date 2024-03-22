@@ -13,6 +13,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from "react-hot-toast"
+import logoicn from '../../assets/images/logo.png';
 
 const Login = () => {
   const navigate = useNavigate();
@@ -22,49 +23,47 @@ const Login = () => {
     password: '',
     passwordState: null,
   });
-  useEffect(()=>{
-    localStorage.removeItem("user-info")
-  },[])
+  useEffect(() => {
+    localStorage.removeItem('user-info');
+  }, []);
   const customValidation = () => {
     const newState = { ...userCredential };
     if (userCredential.mobileNumber === '') {
       newState['mobileNumberState'] = 'Mobile Number is required';
     }
     if (userCredential.password === '') {
-        newState['passwordState'] = 'Password is required';
-      }
-    setUserCredential({ ...newState});
-
+      newState['passwordState'] = 'Password is required';
+    }
+    setUserCredential({ ...newState });
   };
-const handleSubmit = async (e, value) => {
-  e.preventDefault();
-  customValidation();
-  if (!userCredential?.mobileNumberState && !userCredential?.passwordState) {
-    await axios
-      .post('http://localhost:8080/api/auth/signin', {
-        mobileNumber: userCredential.mobileNumber,
-        password: userCredential.password,
-      })
-      .then((response) => {
-        if (response) {
-          
-          localStorage.setItem('user-info', JSON.stringify(response.data));
-          setTimeout(()=>{
-            if (response.data.role === "Customer"){
-              navigate('/u/dashboard');
-            } else{
-              navigate('/dashboard');
-            }
-          },200)
-        }
-      })
-      .catch((err) => {
-        if (err?.response?.status){
+  const handleSubmit = async (e, value) => {
+    e.preventDefault();
+    customValidation();
+    if (!userCredential?.mobileNumberState && !userCredential?.passwordState) {
+      await axios
+        .post(`${process.env.REACT_APP_API_URL}/auth/signin`, {
+          mobileNumber: userCredential.mobileNumber,
+          password: userCredential.password,
+        })
+        .then((response) => {
+          if (response) {
+            localStorage.setItem('user-info', JSON.stringify(response.data));
+            setTimeout(() => {
+              if (response.data.role === 'Customer') {
+                navigate('/u/dashboard');
+              } else {
+                navigate('/dashboard');
+              }
+            }, 200);
+          }
+        })
+        .catch((err) => {
+          if (err?.response?.status) {
             toast.error('unauthorized User');
-        } 
-      });
-  }
-};
+          }
+        });
+    }
+  };
   const handleChange = (name, value) => {
     const newState = { ...userCredential };
     newState[name] = value;
@@ -80,15 +79,16 @@ const handleSubmit = async (e, value) => {
             p: 0,
           }}
         >
-          <Box
-            sx={{
-              padding: '15px 30px',
-            }}
-            display="flex"
-            alignItems="center"
-          >
-            <Box flexGrow={1}>
-              <Typography
+          <Box display="flex" alignItems="center">
+            <Box flexGrow={1} display={'flex'} justifyContent={'center'}>
+              <Box
+                component={'img'}
+                sx={{ width: '120px' }}
+                alt="Logo"
+                src={logoicn}
+              />
+
+              {/* <Typography
                 sx={{
                   fontSize: '24px',
                   fontWeight: '600',
@@ -96,7 +96,7 @@ const handleSubmit = async (e, value) => {
                 }}
               >
                 Login
-              </Typography>
+              </Typography> */}
             </Box>
           </Box>
           <Divider />

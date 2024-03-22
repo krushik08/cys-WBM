@@ -46,9 +46,9 @@ fetchBillingData();
         <Grid item xs={12} lg={4}>
           <UserCard
             primary="Consumption"
-            secondary={billingData?.waterConsumption}
+            secondary={billingData?.waterConsumption || 0}
             content1="Current Water Bill"
-            content2={billingData?.amount}
+            content2={billingData?.amount || 0}
             color={theme.palette.success.dark}
           />
         </Grid>
@@ -57,34 +57,29 @@ fetchBillingData();
             primary="Connection Due"
             secondary={consumeData?.date}
             content1="Reading"
-            content2={consumeData?.reading}
+            content2={consumeData?.reading || 0}
             color={theme.palette.primary.main}
           />
         </Grid>
         <Grid item xs={12} lg={4}>
           <UserCard
             primary="Total Amount Due"
-            secondary={billingData?.amount}
+            secondary={billingData?.amount || 0}
             content1="Current Bill Period"
-            content2={moment(billingData?.dueDate).format('MMM YYYY')}
+            content2={
+              billingData?.dueDate &&
+              moment(billingData?.dueDate).format('MMM YYYY')
+            }
             color={theme.palette.danger.main}
           />
         </Grid>
 
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={12}>
           <MonthlyConsumptionPattern />
         </Grid>
 
-        <Grid item xs={12} lg={6}>
-          <MonthlyCollectionDues />
-        </Grid>
-
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={12}>
           <PaymentHistory />
-        </Grid>
-
-        <Grid item xs={12} lg={6}>
-          <CollectionHistory />
         </Grid>
       </Grid>
     </>

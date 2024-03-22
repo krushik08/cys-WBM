@@ -11,69 +11,66 @@ import {
   Select,
   Stack,
   TextField,
-  Typography
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
-import toast from "react-hot-toast";
-import ApiService from "../../../../api";
+  Typography,
+} from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import ApiService from '../../../api';
 
 const Reading = () => {
-  const [userList,setUserList] = useState([])
-  const [selectedCustomer,setSelectedCustomer] = useState('')
-  const [selectedCustomerError,setSelectedCustomerError] = useState('')
+  const [userList, setUserList] = useState([]);
+  const [selectedCustomer, setSelectedCustomer] = useState('');
+  const [selectedCustomerError, setSelectedCustomerError] = useState('');
   const [reading, setReading] = useState('');
   const [readingError, setReadingError] = useState('');
-  const fetchUser = ()=>{
-      ApiService.request(`/user/get-users`, 'get')
-        .then((response) => {
-          if (response.status === 200) {
-            const listArray = [];
-            if (response.data.length) {
-              response.data.map((item) => {
-                if (item?.role === 'Customer') {
-                  listArray.push(item);
-                }
-              });
-            }
-            setUserList(listArray);
+  const fetchUser = () => {
+    ApiService.request(`/user/get-users`, 'get')
+      .then((response) => {
+        if (response.status === 200) {
+          const listArray = [];
+          if (response.data.length) {
+            response.data.map((item) => {
+              if (item?.role === 'Customer') {
+                listArray.push(item);
+              }
+            });
           }
-        })
-        .catch((err) => {});
-  }
-  useEffect(()=>{
-      fetchUser()
-      return () => {}
-  },[])
-  const handleChangeCustomer =(e)=>{
+          setUserList(listArray);
+        }
+      })
+      .catch((err) => {});
+  };
+  useEffect(() => {
+    fetchUser();
+    return () => {};
+  }, []);
+  const handleChangeCustomer = (e) => {
     setSelectedCustomerError('');
     setSelectedCustomer(e.target.value);
-  }
-  const customValidation = ()=>{
-    if(reading === ''){
-      setReadingError('Reading is required')
-    }else{
+  };
+  const customValidation = () => {
+    if (reading === '') {
+      setReadingError('Reading is required');
+    } else {
       setReadingError('');
     }
-    if(selectedCustomer === ''){
-      setSelectedCustomerError('Customer is missing')
-    }else
-    {
+    if (selectedCustomer === '') {
+      setSelectedCustomerError('Customer is missing');
+    } else {
       setSelectedCustomerError('');
     }
-
-  }
-  const generateBill = ()=>{
-    customValidation()
-    if (!readingError && !selectedCustomerError){
-      ApiService.request
-        ('/stats/add-usage','post', {
-          meter: {
-            user: {
-              id: selectedCustomer,
-            },
+  };
+  const generateBill = () => {
+    customValidation();
+    if (!readingError && !selectedCustomerError) {
+      ApiService.request('/stats/add-usage', 'post', {
+        meter: {
+          user: {
+            id: selectedCustomer,
           },
-          reading: reading,
-        })
+        },
+        reading: reading,
+      })
         .then((response) => {
           if (response.status === 200) {
             setSelectedCustomer('');
@@ -83,7 +80,7 @@ const Reading = () => {
         })
         .catch((err) => {});
     }
-  }
+  };
   return (
     <Grid container spacing={2}>
       <Grid item xs={6}>
@@ -156,8 +153,6 @@ const Reading = () => {
           </CardContent>
         </Card>
       </Grid>
-
-   
     </Grid>
   );
 };

@@ -1,15 +1,43 @@
-import React from "react";
-import { Card, CardContent, Typography, Box } from "@mui/material";
-import Chart from "react-apexcharts";
+import React, { useEffect, useState } from 'react';
+import { Card, CardContent, Typography, Box } from '@mui/material';
+import Chart from 'react-apexcharts';
+import ApiService from '../../../../api';
 
 const MonthlyConsumptionPattern = () => {
+  const [staticData, setStaticData] = useState([]);
+  const [dateList, setDateList] = useState([]);
+  const userData = JSON.parse(localStorage.getItem('user-info'));
+  const fetchConsumption = () => {
+    ApiService.request(
+      `/stats/get-last-two-months-consumption/${userData.id}`,
+      'get'
+    )
+      .then((response) => {
+        const dates = [];
+        const staticDataList = [];
+        if (response.status === 200) {
+          if (response?.data?.length) {
+            response?.data.map((item) => {
+              staticDataList.push(item?.reading);
+              dates.push(item?.date);
+            });
+            setStaticData(staticDataList);
+            setDateList(dates);
+          }
+        }
+      })
+      .catch((err) => {});
+  };
+  useEffect(() => {
+    fetchConsumption();
+  }, []);
   const optionsMonthlyConsumptionPattern = {
-    colors: ["#39cb7f", "#fc4b6c"],
+    colors: ['#39cb7f'],
 
     options: {
       chart: {
         height: 350,
-        type: "area",
+        type: 'area',
         toolbar: {
           show: false,
         },
@@ -19,38 +47,27 @@ const MonthlyConsumptionPattern = () => {
         enabled: false,
       },
       stroke: {
-        curve: "smooth",
+        curve: 'smooth',
       },
       xaxis: {
-        type: "category",
-        categories: [
-          "jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-        ],
+        type: 'category',
+        categories: dateList,
+        labels: {
+          style: {
+            cssClass: 'grey--text lighten-2--text fill-color',
+          },
+        },
       },
     },
 
     tooltip: {
-      theme: "dark",
+      theme: 'dark',
     },
   };
   const seriessalesoverview = [
     {
-      name: "Earnings",
-      data: [355, 390, 300, 350, 390, 180, 355, 390, 300, 350, 390],
-    },
-    {
-      name: "Un-paid",
-      data: [280, 250, 325, 215, 250, 310, 280, 250, 325, 215, 250],
+      name: 'Consumption',
+      data: staticData,
     },
   ];
 
@@ -58,29 +75,29 @@ const MonthlyConsumptionPattern = () => {
     <Card
       variant="outlined"
       sx={{
-        paddingBottom: "0",
+        paddingBottom: '0',
       }}
     >
       <CardContent
         sx={{
-          paddingBottom: "16px !important",
+          paddingBottom: '16px !important',
         }}
       >
         <Box
           sx={{
             display: {
-              sm: "flex",
-              xs: "block",
+              sm: 'flex',
+              xs: 'block',
             },
-            alignItems: "center",
+            alignItems: 'center',
           }}
         >
           <Box>
             <Typography
               variant="h3"
-              fontWeight={"bold"}
+              fontWeight={'bold'}
               sx={{
-                marginBottom: "0",
+                marginBottom: '0',
               }}
               gutterBottom
             >
@@ -90,7 +107,7 @@ const MonthlyConsumptionPattern = () => {
         </Box>
         <Box
           sx={{
-            marginTop: "24px",
+            marginTop: '24px',
           }}
         >
           <Chart
